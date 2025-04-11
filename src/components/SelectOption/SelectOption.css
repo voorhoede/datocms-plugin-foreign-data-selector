@@ -1,0 +1,23 @@
+.select-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+}
+
+.select-option__image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.select-option__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--spacing-xs);
+}
+
+.select-option__title,
+.select-option__description {
+  margin: 0px;
+}
