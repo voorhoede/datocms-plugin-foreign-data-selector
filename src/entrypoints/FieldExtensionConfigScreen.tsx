@@ -1,11 +1,5 @@
 import type { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-sdk";
-import {
-  Canvas,
-  Form,
-  Section,
-  TextareaField,
-  TextField,
-} from "datocms-react-ui";
+import { Canvas, Form, TextareaField, TextField } from "datocms-react-ui";
 import { useEffect, useState } from "react";
 import createPreviewObject from "../utils/createPreviewObject";
 import type { Parameters } from "../types/parameters";
@@ -24,8 +18,8 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   const [path, setPath] = useState<string>(parameters.path ?? "data[0].products");
   const [idMap, setIdMap] = useState<string>(parameters.idMap ?? "id");
   const [titleMap, setTitleMap] = useState<string>(parameters.titleMap ?? "title");
-  const [descriptionMap, setDescriptionMap] = useState<string>(parameters.descriptionMap);
-  const [imageUrlMap, setImageUrlMap] = useState<string>(parameters.imageUrlMap);
+  const [descriptionMap, setDescriptionMap] = useState<string | undefined>(parameters.descriptionMap);
+  const [imageUrlMap, setImageUrlMap] = useState<string | undefined>(parameters.imageUrlMap);
   const [preview, setPreview] = useState<string>();
 
   function renderPreview() {
@@ -67,80 +61,77 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
 
   return (
     <Canvas ctx={ctx}>
-      <Section title="Endpoint Configuration">
-        <Form>
-          <TextField
-            id="searchUrl"
-            name="searchUrl"
-            label="Search URL"
-            value={searchUrl}
-            onChange={setSearchUrl}
-            hint="URL should contain a { query } placeholder."
-            required
-          />
-          <TextField
-            id="getItemUrl"
-            name="getItemUrl"
-            label="Get Item URL"
-            value={getItemUrl}
-            onChange={setGetItemUrl}
-            hint="URL should contain a { id } placeholder."
-            required
-          />
-          <TextField
-            id="additionalHeaders"
-            name="additionalHeaders"
-            label="Additional Headers (JSON format)"
-            hint='For example: {"Authorization":"Bearer 123","X-API-Key":"abc"}'
-            value={additionalHeaders}
-            onChange={setAdditionalHeaders}
-          />
-        </Form>
-      </Section>
-
-      <Section title="Response Mapping">
-        <Form>
-          <TextField
-            id="path"
-            name="path"
-            label="Path"
-            value={path}
-            onChange={setPath}
-            required
-          />
-          <TextField
-            id="idMap"
-            name="idMap"
-            label="ID"
-            value={idMap}
-            onChange={setIdMap}
-            required
-          />
-          <TextField
-            id="titleMap"
-            name="titleMap"
-            label="Title"
-            value={titleMap}
-            onChange={setTitleMap}
-            required
-          />
-          <TextField
-            id="description"
-            name="description"
-            label="Description"
-            value={descriptionMap}
-            onChange={setDescriptionMap}
-          />
-          <TextField
-            id="imageUrl"
-            name="imageUrl"
-            label="Image URL"
-            value={imageUrlMap}
-            onChange={setImageUrlMap}
-          />
-        </Form>
-      </Section>
       <Form>
+        <h3>Search Configuration</h3>
+
+        <TextField
+          id="searchUrl"
+          name="searchUrl"
+          label="Search URL"
+          value={searchUrl}
+          onChange={setSearchUrl}
+          hint="URL should contain a { query } placeholder."
+          required
+        />
+        <TextField
+          id="getItemUrl"
+          name="getItemUrl"
+          label="Get Item URL"
+          value={getItemUrl}
+          onChange={setGetItemUrl}
+          hint="URL should contain a { id } placeholder."
+          required
+        />
+        <TextField
+          id="additionalHeaders"
+          name="additionalHeaders"
+          label="Additional Headers (JSON format)"
+          hint='For example: {"Authorization":"Bearer 123","X-API-Key":"abc"}'
+          value={additionalHeaders}
+          onChange={setAdditionalHeaders}
+        />
+
+        <h3>Response Mapping</h3>
+
+        <TextField
+          id="path"
+          name="path"
+          label="Path"
+          value={path}
+          onChange={setPath}
+          required
+        />
+        <TextField
+          id="idMap"
+          name="idMap"
+          label="ID"
+          value={idMap}
+          onChange={setIdMap}
+          required
+        />
+        <TextField
+          id="titleMap"
+          name="titleMap"
+          label="Title"
+          value={titleMap}
+          onChange={setTitleMap}
+          required
+        />
+        <TextField
+          id="description"
+          name="description"
+          label="Description"
+          value={descriptionMap}
+          onChange={setDescriptionMap}
+        />
+        <TextField
+          id="imageUrl"
+          name="imageUrl"
+          label="Image URL"
+          value={imageUrlMap}
+          onChange={setImageUrlMap}
+        />
+
         <TextareaField
           id="responsePreview"
           name="responsePreview"
