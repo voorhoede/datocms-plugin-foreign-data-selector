@@ -20,7 +20,7 @@ type Props = {
 export default function FieldExtension({ ctx }: Props) {
   const parameters = ctx.parameters as Parameters;
   const [selectValue, setSelectValue] = useState<SelectOptionType | null>(null);
-  const [value, setValue] = useState<Record<string, any>>(
+  const [value, setValue] = useState(
     JSON.parse(get(ctx.formValues, ctx.fieldPath) as string) || [],
   );
 
