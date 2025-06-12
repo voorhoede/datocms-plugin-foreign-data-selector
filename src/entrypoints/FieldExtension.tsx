@@ -51,7 +51,7 @@ export default function FieldExtension({ ctx }: Props) {
               label: item.title,
               data: { ...item },
             }))
-            .filter((item: any) => !value.find((i) => i.id === item.data.id)),
+            .filter((item: any) => !value.find((i: { id: string }) => i.id === item.data.id)),
         );
       } catch (error) {
         reject(error);
@@ -64,7 +64,7 @@ export default function FieldExtension({ ctx }: Props) {
   }
 
   function removeItem(item: { id: string; title: string }) {
-    setValue(value.filter((i) => i.id !== item.id));
+    setValue(value.filter((i: { id: string }) => i.id !== item.id));
   }
 
   useEffect(() => {
@@ -73,14 +73,6 @@ export default function FieldExtension({ ctx }: Props) {
 
   return (
     <Canvas ctx={ctx}>
-      <output>
-        <SelectedList>
-          {value.map((item: any, index: number) => (
-            <SelectedListItem key={index} item={item} removeItem={removeItem}/>
-          ))}
-        </SelectedList>
-      </output>
-
       <AsyncSelect
         loadOptions={loadOptions}
         formatOptionLabel={(option) => <SelectOption option={option} />}
@@ -90,6 +82,14 @@ export default function FieldExtension({ ctx }: Props) {
         }}
         value={selectValue}
       />
+
+      <output>
+        <SelectedList>
+          {value.map((item: any, index: number) => (
+            <SelectedListItem key={index} item={item} removeItem={removeItem}/>
+          ))}
+        </SelectedList>
+      </output>
     </Canvas>
   );
 }
