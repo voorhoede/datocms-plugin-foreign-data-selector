@@ -1,6 +1,5 @@
 export type Parameters = {
   searchUrl: string;
-  getItemUrl: string;
   additionalHeaders: string;
   path: string;
   idMap: string;

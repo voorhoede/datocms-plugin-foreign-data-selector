@@ -13,7 +13,6 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   const parameters = ctx.parameters as Parameters;
   const setParameters = ctx.setParameters;
   const [searchUrl, setSearchUrl] = useState<string>(parameters.searchUrl);
-  const [getItemUrl, setGetItemUrl] = useState<string>(parameters.getItemUrl);
   const [additionalHeaders, setAdditionalHeaders] = useState<string>(parameters.additionalHeaders);
   const [path, setPath] = useState<string>(parameters.path ?? "data[0].products");
   const [idMap, setIdMap] = useState<string>(parameters.idMap ?? "id");
@@ -39,7 +38,6 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
     const newParameters = {
       ...parameters,
       searchUrl,
-      getItemUrl,
       additionalHeaders,
       path,
       idMap,
@@ -50,7 +48,6 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
     setParameters(newParameters);
   }, [
     searchUrl,
-    getItemUrl,
     additionalHeaders,
     path,
     idMap,
@@ -71,15 +68,6 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           value={searchUrl}
           onChange={setSearchUrl}
           hint="URL should contain a { query } placeholder."
-          required
-        />
-        <TextField
-          id="getItemUrl"
-          name="getItemUrl"
-          label="Get Item URL"
-          value={getItemUrl}
-          onChange={setGetItemUrl}
-          hint="URL should contain a { id } placeholder."
           required
         />
         <TextField
@@ -131,7 +119,6 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           value={imageUrlMap}
           onChange={setImageUrlMap}
         />
-
         <TextareaField
           id="responsePreview"
           name="responsePreview"
