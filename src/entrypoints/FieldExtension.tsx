@@ -20,8 +20,8 @@ type Props = {
 export default function FieldExtension({ ctx }: Props) {
   const parameters = ctx.parameters as Parameters;
   const [selectValue, setSelectValue] = useState<SelectOptionType | null>(null);
-  const [value, setValue] = useState(
-    JSON.parse(get(ctx.formValues as Record<string, any>, ctx.fieldPath)) || [],
+  const [value, setValue] = useState<Record<string, any>>(
+    JSON.parse(get(ctx.formValues, ctx.fieldPath) as string) || [],
   );
 
   async function loadOptions(inputValue: string) {
@@ -68,7 +68,13 @@ export default function FieldExtension({ ctx }: Props) {
   }
 
   useEffect(() => {
-    ctx.setFieldValue(ctx.fieldPath, JSON.stringify(value));
+    /* fieldValue contains all sorts of characters like \n which will never be matched, so we have to parse and stringify to get rid of them */
+    const oldFieldValue = JSON.stringify(JSON.parse(get(ctx.formValues, ctx.fieldPath) as string));
+    const newFieldValue = JSON.stringify(value);
+
+    if (oldFieldValue !== newFieldValue) {
+      ctx.setFieldValue(ctx.fieldPath, newFieldValue);
+    }
   }, [value]);
 
   return (
