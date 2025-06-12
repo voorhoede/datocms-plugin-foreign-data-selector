@@ -3,17 +3,21 @@
   gap: var(--spacing-l);
   padding: var(--spacing-m);
   border: 1px solid var(--border-color);
+  border-radius: 4px;
 }
 
 .selected-list-item__details {
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-s);
 }
 
 .selected-list-item__image {
-  height: 90px;
-  width: 90px;
+  width: auto;
+  height: 96px;
+  aspect-ratio: 1;
+  object-fit: contain;
 }
 
 .selected-list-item__title,
@@ -21,9 +25,16 @@
   margin: 0px;
 }
 
+.selected-list-item__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+
 .selected-list-item__description {
-  height: 3lh;
-  /* white-space: nowrap; */
-  overflow: hidden;
-  text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
 }

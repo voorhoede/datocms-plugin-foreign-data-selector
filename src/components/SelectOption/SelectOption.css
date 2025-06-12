@@ -1,23 +1,37 @@
 .select-option {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-l);
 }
 
 .select-option__image {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
+    width: auto;
+    height: 96px;
+    aspect-ratio: 1;
+    object-fit: contain;
 }
 
 .select-option__content {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-s);
 }
 
 .select-option__title,
 .select-option__description {
   margin: 0px;
+}
+
+.select-option__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}
+
+.select-option__description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
 }
