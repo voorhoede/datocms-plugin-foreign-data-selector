@@ -4,13 +4,13 @@ import { Canvas } from "datocms-react-ui";
 import type { Parameters } from "../types/parameters";
 import { useEffect, useState } from "react";
 import getDataFromPath from "../utils/getDataFromPath";
-import AsyncSelect from "react-select/async";
 import parseString from "../utils/parseString";
 import formatData from "../utils/formatData";
 import SelectOption from "../components/SelectOption/SelectOption";
 import type { SelectOption as SelectOptionType } from "../types/selectOption";
 import SelectedList from "../components/SelectedList/SelectedList";
 import SelectedListItem from "../components/SelectedListItem/SelectedListItem";
+import InputSelect from "../components/InputSelect/InputSelect";
 
 type Props = {
   fieldExtensionId: string;
@@ -27,9 +27,9 @@ export default function FieldExtension({ ctx }: Props) {
   async function loadOptions(inputValue: string) {
     return new Promise<SelectOptionType[]>(async (resolve, reject) => {
       try {
-        const url = new URL(
-          parseString(parameters.searchUrl, { query: inputValue }),
-        );
+        // const proxy = new URL('https://cors-proxy.datocms.com');
+        const url = new URL(parseString(parameters.searchUrl, { query: inputValue }));
+
         const headers = {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -39,7 +39,7 @@ export default function FieldExtension({ ctx }: Props) {
         }
         const response = await fetch(url, {
           method: "GET",
-          headers,
+          headers
         });
         const data = await response.json();
         const dataFromPath = getDataFromPath(data, parameters.path);
@@ -77,9 +77,10 @@ export default function FieldExtension({ ctx }: Props) {
     }
   }, [value]);
 
+
   return (
     <Canvas ctx={ctx}>
-      <AsyncSelect
+      <InputSelect
         loadOptions={loadOptions}
         formatOptionLabel={(option) => <SelectOption option={option} />}
         onChange={(item) => {
