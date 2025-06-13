@@ -1,8 +1,15 @@
 .selected-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-m);
-  list-style-type: "";
-  padding: 0px;
-  margin: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-m);
+    list-style-type: "";
+    margin: 0px;
+    border: 3px dashed transparent;
+    transition: border-color 0.2s ease-in-out;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.selected-list--dragging {
+    border-color: var(--accent-color);
 }

@@ -11,6 +11,8 @@ import type { SelectOption as SelectOptionType } from "../types/selectOption";
 import SelectedList from "../components/SelectedList/SelectedList";
 import SelectedListItem from "../components/SelectedListItem/SelectedListItem";
 import InputSelect from "../components/InputSelect/InputSelect";
+import { DragEndEvent } from "@dnd-kit/core";
+import { ForeignDataItem } from "../types/ForeignDataItem";
 
 type Props = {
   fieldExtensionId: string;
@@ -20,7 +22,7 @@ type Props = {
 export default function FieldExtension({ ctx }: Props) {
   const parameters = ctx.parameters as Parameters;
   const [selectValue, setSelectValue] = useState<SelectOptionType | null>(null);
-  const [value, setValue] = useState(
+  const [value, setValue] = useState<ForeignDataItem[]>(
     JSON.parse(get(ctx.formValues, ctx.fieldPath) as string) || [],
   );
 
@@ -64,6 +66,7 @@ export default function FieldExtension({ ctx }: Props) {
   }
 
   function removeItem(item: { id: string; title: string }) {
+    console.log(item);
     setValue(value.filter((i: { id: string }) => i.id !== item.id));
   }
 
@@ -76,7 +79,6 @@ export default function FieldExtension({ ctx }: Props) {
       ctx.setFieldValue(ctx.fieldPath, newFieldValue);
     }
   }, [value]);
-
 
   return (
     <Canvas ctx={ctx}>
@@ -91,9 +93,9 @@ export default function FieldExtension({ ctx }: Props) {
       />
 
       <output>
-        <SelectedList>
-          {value.map((item: any, index: number) => (
-            <SelectedListItem key={index} item={item} removeItem={removeItem}/>
+        <SelectedList items={value} handleDragEnd={setValue}>
+          {value.map((item) => (
+            <SelectedListItem key={item.id} id={item.id} item={item} removeItem={removeItem}/>
           ))}
         </SelectedList>
       </output>
