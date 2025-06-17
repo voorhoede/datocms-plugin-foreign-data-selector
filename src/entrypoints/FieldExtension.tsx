@@ -29,7 +29,6 @@ export default function FieldExtension({ ctx }: Props) {
   async function loadOptions(inputValue: string) {
     return new Promise<SelectOptionType[]>(async (resolve, reject) => {
       try {
-        // const proxy = new URL('https://cors-proxy.datocms.com');
         const url = new URL(parseString(parameters.searchUrl, { query: inputValue }));
         const proxy = new URL('https://cors-proxy.datocms.com');
         proxy.searchParams.set('url', url.href);
