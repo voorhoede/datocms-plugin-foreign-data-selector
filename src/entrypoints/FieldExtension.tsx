@@ -31,15 +31,19 @@ export default function FieldExtension({ ctx }: Props) {
       try {
         // const proxy = new URL('https://cors-proxy.datocms.com');
         const url = new URL(parseString(parameters.searchUrl, { query: inputValue }));
+        const proxy = new URL('https://cors-proxy.datocms.com');
+        proxy.searchParams.set('url', url.href);
 
         const headers = {
           "Content-Type": "application/json",
           Accept: "application/json",
         };
+
         if (parameters.additionalHeaders) {
           Object.assign(headers, JSON.parse(parameters.additionalHeaders));
         }
-        const response = await fetch(url, {
+
+        const response = await fetch(proxy, {
           method: "GET",
           headers
         });
