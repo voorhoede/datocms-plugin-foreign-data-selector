@@ -21,10 +21,10 @@
     display: flex;
     gap: var(--spacing-l);
     padding: var(--spacing-m);
-    border: 1px solid #f0f0f0;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     flex-grow: 1;
-    background-color: white;
+    background-color: #fff;
     box-shadow: 0 2px 5px #0000001a;
 }
 
@@ -52,7 +52,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     overflow: hidden;
-    font-size: 1.0625rem;
+    font-size: var(--font-size-l);
 }
 
 .selected-list-item__description {
