@@ -25,7 +25,7 @@ export default function FieldExtension({ ctx }: Props) {
     JSON.parse(get(ctx.formValues, ctx.fieldPath) as string) || [],
   );
 
-  async function loadOptions(inputValue: string) {
+  function loadOptions(inputValue: string) {
     return new Promise<SelectOptionType[]>(async (resolve, reject) => {
       try {
         const url = new URL(parseString(parameters.searchUrl, { query: inputValue }));
@@ -41,7 +41,7 @@ export default function FieldExtension({ ctx }: Props) {
           Object.assign(headers, JSON.parse(parameters.additionalHeaders));
         }
 
-        const response = await fetch(proxy, {
+        const response = await fetch(url, {
           method: "GET",
           headers
         });
