@@ -11,7 +11,6 @@ import type { SelectOption as SelectOptionType } from "../types/selectOption";
 import SelectedList from "../components/SelectedList/SelectedList";
 import SelectedListItem from "../components/SelectedListItem/SelectedListItem";
 import InputSelect from "../components/InputSelect/InputSelect";
-import { DragEndEvent } from "@dnd-kit/core";
 import { ForeignDataItem } from "../types/ForeignDataItem";
 
 type Props = {
@@ -65,11 +64,11 @@ export default function FieldExtension({ ctx }: Props) {
   }
 
   function selectItem(item: SelectOptionType) {
+    if (parameters.max && value.length >= Number(parameters.max)) return;
     setValue([...value, item.data]);
   }
 
   function removeItem(item: { id: string; title: string }) {
-    console.log(item);
     setValue(value.filter((i: { id: string }) => i.id !== item.id));
   }
 
@@ -86,6 +85,9 @@ export default function FieldExtension({ ctx }: Props) {
   return (
     <Canvas ctx={ctx}>
       <InputSelect
+        itemLength={value.length}
+        min={parameters.min ? Number(parameters.min) : undefined}
+        max={parameters.max ? Number(parameters.max) : undefined}
         loadOptions={loadOptions}
         formatOptionLabel={(option) => <SelectOption option={option} />}
         onChange={(item) => {

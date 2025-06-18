@@ -1,5 +1,12 @@
 import type { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-sdk";
-import { Canvas, Form, TextareaField, TextField } from "datocms-react-ui";
+import {
+  Canvas,
+  FieldError,
+  FieldGroup,
+  Form,
+  TextareaField,
+  TextField,
+} from "datocms-react-ui";
 import { useEffect, useState } from "react";
 import createPreviewObject from "../utils/createPreviewObject";
 import type { Parameters } from "../types/parameters";
@@ -13,12 +20,24 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   const parameters = ctx.parameters as Parameters;
   const setParameters = ctx.setParameters;
   const [searchUrl, setSearchUrl] = useState<string>(parameters.searchUrl);
-  const [additionalHeaders, setAdditionalHeaders] = useState<string>(parameters.additionalHeaders);
-  const [path, setPath] = useState<string>(parameters.path ?? "data[0].products");
+  const [additionalHeaders, setAdditionalHeaders] = useState<string>(
+    parameters.additionalHeaders,
+  );
+  const [min, setMin] = useState<string | undefined>(parameters.min);
+  const [max, setMax] = useState<string | undefined>(parameters.max);
+  const [path, setPath] = useState<string>(
+    parameters.path ?? "data[0].products",
+  );
   const [idMap, setIdMap] = useState<string>(parameters.idMap ?? "id");
-  const [titleMap, setTitleMap] = useState<string>(parameters.titleMap ?? "title");
-  const [descriptionMap, setDescriptionMap] = useState<string | undefined>(parameters.descriptionMap);
-  const [imageUrlMap, setImageUrlMap] = useState<string | undefined>(parameters.imageUrlMap);
+  const [titleMap, setTitleMap] = useState<string>(
+    parameters.titleMap ?? "title",
+  );
+  const [descriptionMap, setDescriptionMap] = useState<string | undefined>(
+    parameters.descriptionMap,
+  );
+  const [imageUrlMap, setImageUrlMap] = useState<string | undefined>(
+    parameters.imageUrlMap,
+  );
   const [preview, setPreview] = useState<string>();
 
   function renderPreview() {
@@ -39,6 +58,8 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
       ...parameters,
       searchUrl,
       additionalHeaders,
+      min,
+      max,
       path,
       idMap,
       titleMap,
@@ -49,6 +70,8 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   }, [
     searchUrl,
     additionalHeaders,
+    min,
+    max,
     path,
     idMap,
     titleMap,
@@ -78,6 +101,23 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           value={additionalHeaders}
           onChange={setAdditionalHeaders}
         />
+
+        <FieldGroup>
+          <TextField
+            id="min"
+            name="min"
+            label="Min"
+            value={min}
+            onChange={setMin}
+          />
+          <TextField
+            id="max"
+            name="max"
+            label="Max"
+            value={max}
+            onChange={setMax}
+          />
+        </FieldGroup>
 
         <h3>Response Mapping</h3>
 
