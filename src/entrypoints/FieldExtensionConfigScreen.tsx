@@ -2,9 +2,10 @@ import type { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-s
 import {
   Canvas,
   FieldGroup,
+  FieldHint,
   Form,
   TextareaField,
-  TextField,
+  TextField
 } from "datocms-react-ui";
 import { useEffect, useState } from "react";
 import createPreviewObject from "../utils/createPreviewObject";
@@ -126,6 +127,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           label="Path"
           value={path}
           onChange={setPath}
+          hint={<FieldHint>Use JSON Path notation. <a href="https://jsonpath.com/" target="_blank">Learn more</a></FieldHint>}
           required
         />
         <TextField
