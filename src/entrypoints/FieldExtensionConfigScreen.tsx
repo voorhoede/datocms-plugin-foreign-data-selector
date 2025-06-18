@@ -1,7 +1,6 @@
 import type { RenderManualFieldExtensionConfigScreenCtx } from "datocms-plugin-sdk";
 import {
   Canvas,
-  FieldError,
   FieldGroup,
   Form,
   TextareaField,

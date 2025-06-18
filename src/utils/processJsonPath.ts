@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { set } from 'lodash';
 
 /**
  * Process various JSONPath notations
@@ -12,11 +12,10 @@ export default function processJsonPath(path: string, value: any): Record<string
   // Check for wildcard notation inside properties
   if (path.includes('[*]')) {
     const pathParts = path.split('.');
-    const result = {};
+    const result: Record<string, any> = {};
 
     // Handle each path segment
     let current = result;
-    let lastProp = '';
 
     for (let i = 0; i < pathParts.length; i++) {
       const part = pathParts[i];
@@ -24,7 +23,6 @@ export default function processJsonPath(path: string, value: any): Record<string
       if (part.includes('[*]')) {
         // This part has a wildcard array
         const propName = part.split('[')[0];
-        lastProp = propName;
 
         if (i === pathParts.length - 1) {
           // If it's the last part, set the array with value
@@ -43,7 +41,6 @@ export default function processJsonPath(path: string, value: any): Record<string
           // Not last, create empty object
           current[part] = {};
           current = current[part];
-          lastProp = part;
         }
       }
     }
@@ -53,6 +50,6 @@ export default function processJsonPath(path: string, value: any): Record<string
 
   // For regular paths without wildcards
   const result = {};
-  _.set(result, path, value);
+  set(result, path, value);
   return result;
 }

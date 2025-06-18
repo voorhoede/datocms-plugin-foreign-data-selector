@@ -4,7 +4,6 @@ import ConfigScreen from "./entrypoints/ConfigScreen";
 import FieldExtensionConfigScreen from "./entrypoints/FieldExtensionConfigScreen";
 import FieldExtension from "./entrypoints/FieldExtension";
 import "datocms-react-ui/styles.css";
-import { get } from "lodash";
 
 connect({
   renderConfigScreen(ctx) {
@@ -49,6 +48,7 @@ connect({
           ] as string,
         );
         const parameters = field.attributes.appearance.parameters;
+
         if (parameters.min && value.length < parameters.min) {
           ctx.alert(`You need to select at least ${parameters.min} items`);
           if (!invalidFields) {
@@ -56,6 +56,7 @@ connect({
             ctx.scrollToField(field.id);
           }
         }
+
         if (parameters.max && value.length > parameters.max) {
           ctx.alert(`You need to select at most ${parameters.max} items`);
           if (!invalidFields) {
