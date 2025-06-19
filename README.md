@@ -1,5 +1,5 @@
 # DatoCMS Plugin: Foreign Data Selector
-A powerful DatoCMS plugin that enables you to search external APIs and store selected results as structured JSON data. Perfect for integrating third-party data sources like product catalogs, user directories, or any external service that provides JSON responses.
+A DatoCMS plugin that enables you to search external APIs and store selected results as structured JSON data. Perfect for integrating third-party data sources like product catalogs, user directories, or any external service that provides JSON responses.
 
 ![Cover image for the plugin](./docs/cover.png)
 
