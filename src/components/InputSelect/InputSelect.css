@@ -1,5 +1,4 @@
 .input-select .input-select__control {
-    /* margin-block-end: var(--spacing-l); */
     background-color: white;
     border-color: rgb(240, 240, 240);
     border-radius: 0px;
@@ -26,9 +25,12 @@
     box-sizing: border-box;
 }
 
-.input-select:focus-within .input-select__dropdown-indicator,
 .input-select__dropdown-indicator:hover {
     color: rgb(153, 153, 153);
+}
+
+.input-select:focus-within .input-select__dropdown-indicator {
+    color: rgb(102, 102, 102);
 }
 
 .input-select .input-select__indicator-separator {
