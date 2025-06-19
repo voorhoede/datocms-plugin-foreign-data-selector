@@ -3,11 +3,21 @@
   "description": "Content managed in DatoCMS is often related to foreign data in external databases or services, like products in an e-commerce platform. The DatoCMS Foreign Data Selector Plugin offers a generic solution to link to these external data sources, search for items and save a reference in a DatoCMS record. So for example your home page could have a highlighted products section.",
   "homepage": "https://github.com/voorhoede/datocms-plugin-foreign-data-selector.git",
   "private": false,
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/voorhoede/datocms-plugin-foreign-data-selector.git"
+  },
   "author": "Voorhoede",
+  "license": "ISC",
   "type": "module",
   "keywords": [
-    "datocms-plugin"
+    "datocms",
+    "datocms-plugin",
+    "foreign-data",
+    "foreign",
+    "data",
+    "json"
   ],
   "datoCmsPlugin": {
     "title": "Foreign Data Selector",
