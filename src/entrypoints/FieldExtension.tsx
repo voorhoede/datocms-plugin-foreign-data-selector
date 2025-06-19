@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import getDataFromPath from "../utils/getDataFromPath";
 import parseString from "../utils/parseString";
 import formatData from "../utils/formatData";
-import SelectOption from "../components/SelectOption/SelectOption";
 import type { SelectOption as SelectOptionType } from "../types/selectOption";
 import SelectedList from "../components/SelectedList/SelectedList";
 import SelectedListItem from "../components/SelectedListItem/SelectedListItem";
@@ -89,7 +88,6 @@ export default function FieldExtension({ ctx }: Props) {
         min={parameters.min ? Number(parameters.min) : undefined}
         max={parameters.max ? Number(parameters.max) : undefined}
         loadOptions={loadOptions}
-        formatOptionLabel={(option) => <SelectOption option={option} />}
         onChange={(item) => {
           selectItem(item as SelectOptionType);
           setSelectValue(null);

@@ -4,6 +4,8 @@ import { FieldError, FieldHint } from "datocms-react-ui";
 
 import "./InputSelect.css";
 import ChevronDownIcon from "../ChevronDownIcon/ChevronDownIcon";
+import SelectOption from "../SelectOption/SelectOption";
+import clsx from "clsx";
 
 type Props = {
   itemLength: number;
@@ -19,8 +21,17 @@ export default forwardRef<any, Props>(
         {...props}
         className="input-select"
         classNames={{
-          control: () => "input-select__control",
+          control: ({ isDisabled }) => clsx(
+            "input-select__control",
+            { "input-select__control--disabled": isDisabled }
+          ),
           indicatorSeparator: () => "input-select__indicator-separator",
+          menu: () => "input-select__menu",
+          option: ({ isFocused, isSelected }) => clsx(
+            "input-select__option",
+            { "input-select__option--focused": isFocused },
+            { "input-select__option--selected": isSelected }
+          ),
         }}
         components={{
           DropdownIndicator: () => (
@@ -29,6 +40,7 @@ export default forwardRef<any, Props>(
             </div>
           )
         }}
+        formatOptionLabel={(option) => <SelectOption option={option} />}
         placeholder=""
         isDisabled={itemLength === max}
         ref={ref} />

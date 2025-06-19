@@ -14,7 +14,11 @@
 
 .input-select:focus-within .input-select__control {
     border-color: var(--accent-color);
-    box-shadow: rgba(172, 0, 132, 0.1) 0 0 0 3px;
+    box-shadow: color-mix(in srgb, var(--accent-color) 10%, transparent) 0 0 0 3px;
+}
+
+.input-select .input-select__control--disabled {
+    background-color: var(--disabled-bg-color);
 }
 
 .input-select__dropdown-indicator {
@@ -35,4 +39,16 @@
 
 .input-select .input-select__indicator-separator {
     background-color: rgb(240, 240, 240);
+}
+
+.input-select .input-select__menu {
+    border-radius: 0px;
+}
+
+.input-select__option.input-select__option--focused {
+    background-color: color-mix(in srgb, var(--accent-color) 10%, transparent);
+}
+
+.input-select__option.input-select__option--selected {
+    background-color: var(--accent-color);
 }
