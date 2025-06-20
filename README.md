@@ -30,6 +30,7 @@ Add this plugin via DatoCMS Settings > Plugins > Add (`/admin/plugins/new`).
 **API Configuration:**
 - **Search URL**: Enter your API endpoint with `{query}` placeholder (e.g., `https://api.example.com/search?q={query}`)
 - **Headers**: Add custom headers for authentication or API requirements
+- **Use CORS Proxy**: Enable if your API requires CORS proxying
 - **Min/Max Items**: Set limits for the number of items that can be selected
 
 **Data Mapping:**
