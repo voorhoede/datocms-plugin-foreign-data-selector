@@ -3,7 +3,7 @@
   "description": "A DatoCMS plugin that enables you to search external APIs and store selected results as structured JSON data. Perfect for integrating third-party data sources like product catalogs, user directories, or any external service that provides JSON responses.",
   "homepage": "https://github.com/voorhoede/datocms-plugin-foreign-data-selector.git",
   "private": false,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/voorhoede/datocms-plugin-foreign-data-selector.git"
