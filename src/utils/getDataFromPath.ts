@@ -1,29 +1,38 @@
 import { get } from 'lodash';
 
+// Helper function to ensure the result is always an array
+function ensureArray(result: any): any[] {
+  if (result === null || result === undefined) {
+    return [];
+  }
+  return Array.isArray(result) ? result : [result];
+}
+
 export default function getDataFromPath(data: any, path: string) {
-  // Speciale case voor root-level array met [*]
+  // Special case for root-level array with [*]
   if (path === '[*]') {
-    return Array.isArray(data) ? data : [];
+    return Array.isArray(data) ? data : (data ? [data] : []);
   }
 
-  // Normale paden direct doorgeven aan Lodash
+  // Pass normal paths directly to Lodash
   if (!path.includes('[*]') && !path.includes(':')) {
-    return get(data, path);
+    const result = get(data, path);
+    return ensureArray(result);
   }
 
-  // Voor data[*] wildcard
+  // For data[*] wildcard
   if (path.includes('[*]')) {
     const basePath = path.split('[*]')[0];
     const restPath = path.split('[*]').slice(1).join('');
 
-    // Als basePath leeg is (voor het geval dat path begint met [*])
+    // If basePath is empty (in case path starts with [*])
     if (basePath === '') {
       if (Array.isArray(data)) {
         if (!restPath) return data;
 
         return data.map(item => {
           if (restPath.startsWith('.')) {
-            // Als restPath begint met een punt, verwijder deze voor het eerste segment
+            // If restPath starts with a dot, remove it for the first segment
             const cleanRestPath = restPath.substring(1);
             return get(item, cleanRestPath);
           } else {
@@ -31,18 +40,19 @@ export default function getDataFromPath(data: any, path: string) {
           }
         });
       }
-      return [];
+      // If data is not an array but exists, make it an array
+      return data ? [data] : [];
     }
 
     const array = get(data, basePath);
     if (Array.isArray(array)) {
-      // Als restPath leeg is, geef de hele array terug
+      // If restPath is empty, return the entire array
       if (!restPath) return array;
 
-      // Anders haal data op voor elk element met restPath
+      // Otherwise retrieve data for each element with restPath
       return array.map(item => {
         if (restPath.startsWith('.')) {
-          // Als restPath begint met een punt, haal deze weg
+          // If restPath starts with a dot, remove it
           const cleanRestPath = restPath.substring(1);
           return get(item, cleanRestPath);
         } else {
@@ -50,10 +60,18 @@ export default function getDataFromPath(data: any, path: string) {
           return get(itemData, `temp${restPath}`);
         }
       });
+    } else if (array !== null && array !== undefined) {
+      // If it's not an array but contains data, treat it as an array with one element
+      if (!restPath) return [array];
+
+      const result = restPath.startsWith('.')
+        ? get(array, restPath.substring(1))
+        : get({ temp: array }, `temp${restPath}`);
+      return ensureArray(result);
     }
   }
 
-  // Voor ranges zoals data[0:5]
+  // For ranges like data[0:5]
   const rangeMatch = path.match(/\[(\d+):(\d+)\]/);
   if (rangeMatch) {
     const [fullMatch, startStr, endStr] = rangeMatch;
@@ -63,7 +81,7 @@ export default function getDataFromPath(data: any, path: string) {
     const basePath = path.split(fullMatch)[0];
     const restPath = path.split(fullMatch).slice(1).join('');
 
-    // Directe array voor root-level range
+    // Direct array for root-level range
     if (basePath === '') {
       if (Array.isArray(data)) {
         const slicedArray = data.slice(start, end + 1);
@@ -96,6 +114,7 @@ export default function getDataFromPath(data: any, path: string) {
     }
   }
 
-  // Fallback naar normale get
-  return get(data, path);
+  // Fallback to normal get - ensure the result is an array
+  const result = get(data, path);
+  return ensureArray(result);
 }
