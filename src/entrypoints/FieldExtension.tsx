@@ -40,7 +40,7 @@ export default function FieldExtension({ ctx }: Props) {
           Object.assign(headers, JSON.parse(parameters.additionalHeaders));
         }
 
-        const response = await fetch(url, {
+        const response = await fetch(proxy, {
           method: "GET",
           headers
         });
