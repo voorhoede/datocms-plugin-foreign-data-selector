@@ -1,6 +1,7 @@
 export type Parameters = {
   searchUrl: string;
   additionalHeaders: string;
+  useCORSProxy: boolean;
   min?: string;
   max?: string;
   path: string;

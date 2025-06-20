@@ -4,6 +4,7 @@ import {
   FieldGroup,
   FieldHint,
   Form,
+  SwitchField,
   TextareaField,
   TextField
 } from "datocms-react-ui";
@@ -20,24 +21,15 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   const parameters = ctx.parameters as Parameters;
   const setParameters = ctx.setParameters;
   const [searchUrl, setSearchUrl] = useState<string>(parameters.searchUrl);
-  const [additionalHeaders, setAdditionalHeaders] = useState<string>(
-    parameters.additionalHeaders,
-  );
+  const [additionalHeaders, setAdditionalHeaders] = useState<string>(parameters.additionalHeaders);
+  const [useCORSProxy, setUseCORSProxy] = useState<boolean>(parameters.useCORSProxy);
   const [min, setMin] = useState<string | undefined>(parameters.min);
   const [max, setMax] = useState<string | undefined>(parameters.max);
-  const [path, setPath] = useState<string>(
-    parameters.path ?? "data[0].products",
-  );
+  const [path, setPath] = useState<string>(parameters.path ?? "data[0].products");
   const [idMap, setIdMap] = useState<string>(parameters.idMap ?? "id");
-  const [titleMap, setTitleMap] = useState<string>(
-    parameters.titleMap ?? "title",
-  );
-  const [descriptionMap, setDescriptionMap] = useState<string | undefined>(
-    parameters.descriptionMap,
-  );
-  const [imageUrlMap, setImageUrlMap] = useState<string | undefined>(
-    parameters.imageUrlMap,
-  );
+  const [titleMap, setTitleMap] = useState<string>(parameters.titleMap ?? "title");
+  const [descriptionMap, setDescriptionMap] = useState<string | undefined>(parameters.descriptionMap);
+  const [imageUrlMap, setImageUrlMap] = useState<string | undefined>(parameters.imageUrlMap);
   const [preview, setPreview] = useState<string>();
 
   function renderPreview() {
@@ -58,6 +50,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
       ...parameters,
       searchUrl,
       additionalHeaders,
+      useCORSProxy,
       min,
       max,
       path,
@@ -100,6 +93,13 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           hint='For example: {"Authorization":"Bearer 123","X-API-Key":"abc"}'
           value={additionalHeaders}
           onChange={setAdditionalHeaders}
+        />
+        <SwitchField
+          name="useCORSProxy"
+          id="useCORSProxy"
+          label="Use CORS Proxy"
+          value={useCORSProxy}
+          onChange={setUseCORSProxy}
         />
 
         <FieldGroup>

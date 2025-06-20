@@ -45,7 +45,7 @@ export default forwardRef<any, Props>(
         isDisabled={itemLength === max}
         ref={ref} />
         { (min && itemLength < min) && <FieldError>You need to select at least {min} items. Select { min - itemLength } more item(s).</FieldError> }
-        { max && <FieldHint>You have selected {itemLength} / {max} items.</FieldHint> }
+        { !(min && itemLength < min) && max && <FieldHint>You have selected {itemLength} / {max} items.</FieldHint> }
       </>
     );
   }
