@@ -8,13 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2025-06-20
 ### Added
 - Documentation
-- GH workflow for automatic plugin release
-- Ability to use a proxy for api calls
+- GH workflow for automatic plugin releases
+- Ability to use a CORS proxy for api calls
 
 ## [1.0.0] - 2025-06-19
 ### Added
 - Plugin release
 - Contributing, license and changelog
 
-[1.1.0]: https://github.com/voorhoede/datocms-plugin-foreign-data-selector/compare/v1.1.0...v1.0.0
+[1.1.0]: https://github.com/voorhoede/datocms-plugin-foreign-data-selector/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/voorhoede/datocms-plugin-foreign-data-selector/compare/be509c8ada9f3c9f9519a6260fffb3e597002f5b...v1.0.0
