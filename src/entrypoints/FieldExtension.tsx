@@ -1,8 +1,8 @@
-import { get } from "lodash";
+import { debounce, get } from "lodash";
 import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
 import type { Parameters } from "../types/parameters";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import getDataFromPath from "../utils/getDataFromPath";
 import parseString from "../utils/parseString";
 import formatData from "../utils/formatData";
@@ -81,13 +81,18 @@ export default function FieldExtension({ ctx }: Props) {
     }
   }, [value]);
 
+  const debouncedLoadOptions = useMemo(
+    () => debounce(loadOptions, 300),
+    [loadOptions]
+  );
+
   return (
     <Canvas ctx={ctx}>
       <InputSelect
         itemLength={value.length}
         min={parameters.min ? Number(parameters.min) : undefined}
         max={parameters.max ? Number(parameters.max) : undefined}
-        loadOptions={loadOptions}
+        loadOptions={debouncedLoadOptions}
         onChange={(item) => {
           selectItem(item as SelectOptionType);
           setSelectValue(null);
