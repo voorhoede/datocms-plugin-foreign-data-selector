@@ -83,7 +83,7 @@ export default function FieldExtension({ ctx }: Props) {
 
   const debouncedLoadOptions = useMemo(
     () => debounce(loadOptions, 300),
-    []
+    [loadOptions]
   );
 
   return (
