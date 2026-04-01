@@ -77,101 +77,106 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
       <Form>
         <h3>Search Configuration</h3>
 
-        <TextField
-          id="searchUrl"
-          name="searchUrl"
-          label="Search URL"
-          value={searchUrl}
-          onChange={setSearchUrl}
-          hint="URL should contain a { query } placeholder."
-          required
-        />
-        <TextField
-          id="additionalHeaders"
-          name="additionalHeaders"
-          label="Additional Headers (JSON format)"
-          hint='For example: {"Authorization":"Bearer 123","X-API-Key":"abc"}'
-          value={additionalHeaders}
-          onChange={setAdditionalHeaders}
-        />
-        <SwitchField
-          name="useCORSProxy"
-          id="useCORSProxy"
-          label="Use CORS Proxy"
-          value={useCORSProxy}
-          onChange={setUseCORSProxy}
-        />
+        <FieldGroup>
+          <TextField
+            id="searchUrl"
+            name="searchUrl"
+            label="Search URL"
+            value={searchUrl}
+            onChange={setSearchUrl}
+            required
+          />
+          <TextField
+            id="additionalHeaders"
+            name="additionalHeaders"
+            label="Additional Headers (JSON format)"
+            hint='For example: {"Authorization":"Bearer 123","X-API-Key":"abc"}'
+            value={additionalHeaders}
+            onChange={setAdditionalHeaders}
+          />
+          <SwitchField
+            name="useCORSProxy"
+            id="useCORSProxy"
+            label="Use CORS Proxy"
+            value={useCORSProxy}
+            onChange={setUseCORSProxy}
+          />
+        </FieldGroup>
+
+        <h3>Response Mapping</h3>
+
+        <FieldGroup>
+          <TextField
+            id="path"
+            name="path"
+            label="Path"
+            value={path}
+            onChange={setPath}
+            hint={<FieldHint>Use JSON Path notation. <a href="https://jsonpath.com/" target="_blank">Learn more</a></FieldHint>}
+            required
+          />
+          <TextField
+            id="idMap"
+            name="idMap"
+            label="ID"
+            value={idMap}
+            onChange={setIdMap}
+            required
+          />
+          <TextField
+            id="titleMap"
+            name="titleMap"
+            label="Title"
+            value={titleMap}
+            onChange={setTitleMap}
+            required
+          />
+          <TextField
+            id="description"
+            name="description"
+            label="Description"
+            value={descriptionMap}
+            onChange={setDescriptionMap}
+          />
+          <TextField
+            id="imageUrl"
+            name="imageUrl"
+            label="Image URL"
+            value={imageUrlMap}
+            onChange={setImageUrlMap}
+          />
+          <TextareaField
+            id="responsePreview"
+            name="responsePreview"
+            label="Response Preview"
+            value={preview}
+            onChange={() => undefined}
+            textareaInputProps={{
+              monospaced: true,
+              readOnly: true,
+              rows: 10,
+            }}
+          />
+        </FieldGroup>
+
+        <h3>Field Configuration</h3>
 
         <FieldGroup>
           <TextField
             id="min"
             name="min"
-            label="Min"
+            label="Min selectable items"
             value={min}
             onChange={setMin}
           />
           <TextField
             id="max"
             name="max"
-            label="Max"
+            label="Max selectable items"
             value={max}
             onChange={setMax}
           />
         </FieldGroup>
-
-        <h3>Response Mapping</h3>
-
-        <TextField
-          id="path"
-          name="path"
-          label="Path"
-          value={path}
-          onChange={setPath}
-          hint={<FieldHint>Use JSON Path notation. <a href="https://jsonpath.com/" target="_blank">Learn more</a></FieldHint>}
-          required
-        />
-        <TextField
-          id="idMap"
-          name="idMap"
-          label="ID"
-          value={idMap}
-          onChange={setIdMap}
-          required
-        />
-        <TextField
-          id="titleMap"
-          name="titleMap"
-          label="Title"
-          value={titleMap}
-          onChange={setTitleMap}
-          required
-        />
-        <TextField
-          id="description"
-          name="description"
-          label="Description"
-          value={descriptionMap}
-          onChange={setDescriptionMap}
-        />
-        <TextField
-          id="imageUrl"
-          name="imageUrl"
-          label="Image URL"
-          value={imageUrlMap}
-          onChange={setImageUrlMap}
-        />
-        <TextareaField
-          id="responsePreview"
-          name="responsePreview"
-          label="Response Preview"
-          value={preview}
-          onChange={() => undefined}
-          textareaInputProps={{
-            monospaced: true,
-            readOnly: true,
-            rows: 10,
-          }}
-        />
       </Form>
     </Canvas>
   );
