@@ -2,7 +2,7 @@ import { debounce, get } from "lodash";
 import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
 import type { Parameters } from "../types/parameters";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import getDataFromPath from "../utils/getDataFromPath";
 import parseString from "../utils/parseString";
 import formatData from "../utils/formatData";
@@ -24,43 +24,59 @@ export default function FieldExtension({ ctx }: Props) {
     JSON.parse(get(ctx.formValues, ctx.fieldPath) as string) || [],
   );
 
-  function loadOptions(inputValue: string) {
-    return new Promise<SelectOptionType[]>(async (resolve, reject) => {
-      try {
-        const url = new URL(parseString(parameters.searchUrl, { query: inputValue }));
-        const proxy = new URL('https://cors-proxy.datocms.com');
-        proxy.searchParams.set('url', url.href);
+  const fetchOptions = async (
+    inputValue: string,
+  ): Promise<SelectOptionType[]> => {
+    const url = new URL(
+      parseString(parameters.searchUrl, { query: inputValue }),
+    );
+    const proxy = new URL("https://cors-proxy.datocms.com");
+    proxy.searchParams.set("url", url.href);
 
-        const headers = {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        };
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
 
-        if (parameters.additionalHeaders) {
-          Object.assign(headers, JSON.parse(parameters.additionalHeaders));
-        }
+    if (parameters.additionalHeaders) {
+      Object.assign(headers, JSON.parse(parameters.additionalHeaders));
+    }
 
-        const response = await fetch(parameters.useCORSProxy ? proxy : url, {
-          method: "GET",
-          headers
-        });
-        const data = await response.json();
-        const dataFromPath = getDataFromPath(data, parameters.path);
-        const formattedData = formatData(dataFromPath, parameters);
-        resolve(
-          formattedData
-            .map((item: any) => ({
-              value: item.id,
-              label: item.title,
-              data: { ...item },
-            }))
-            .filter((item: any) => !value.find((i: { id: string }) => i.id === item.data.id)),
-        );
-      } catch (error) {
-        reject(error);
-      }
+    const response = await fetch(parameters.useCORSProxy ? proxy : url, {
+      method: "GET",
+      headers,
     });
-  }
+
+    const data = await response.json();
+    const dataFromPath = getDataFromPath(data, parameters.path);
+    const formattedData = formatData(dataFromPath, parameters);
+
+    return formattedData
+      .map((item: any) => ({
+        value: item.id,
+        label: item.title,
+        data: { ...item },
+      }))
+      .filter(
+        (item: any) =>
+          !value.find((i: { id: string }) => i.id === item.data.id),
+      );
+  };
+
+  const loadOptions = useCallback(
+    debounce(
+      (inputValue: string, callback: (options: SelectOptionType[]) => void) => {
+        fetchOptions(inputValue)
+          .then((options) => callback(options))
+          .catch((error) => {
+            console.error(error);
+            callback([]);
+          });
+      },
+      300,
+    ),
+    [parameters, value],
+  );
 
   function selectItem(item: SelectOptionType) {
     if (parameters.max && value.length >= Number(parameters.max)) return;
@@ -73,18 +89,15 @@ export default function FieldExtension({ ctx }: Props) {
 
   useEffect(() => {
     /* fieldValue contains all sorts of characters like \n which will never be matched, so we have to parse and stringify to get rid of them */
-    const oldFieldValue = JSON.stringify(JSON.parse(get(ctx.formValues, ctx.fieldPath) as string));
+    const oldFieldValue = JSON.stringify(
+      JSON.parse(get(ctx.formValues, ctx.fieldPath) as string),
+    );
     const newFieldValue = JSON.stringify(value);
 
     if (oldFieldValue !== newFieldValue) {
       ctx.setFieldValue(ctx.fieldPath, newFieldValue);
     }
-  }, [value]);
-
-  const debouncedLoadOptions = useMemo(
-    () => debounce(loadOptions, 300),
-    [loadOptions]
-  );
+  }, [value, ctx.fieldPath, ctx.formValues]);
 
   return (
     <Canvas ctx={ctx}>
@@ -92,7 +105,7 @@ export default function FieldExtension({ ctx }: Props) {
         itemLength={value.length}
         min={parameters.min ? Number(parameters.min) : undefined}
         max={parameters.max ? Number(parameters.max) : undefined}
-        loadOptions={debouncedLoadOptions}
+        loadOptions={loadOptions}
         onChange={(item) => {
           selectItem(item as SelectOptionType);
           setSelectValue(null);
@@ -103,7 +116,12 @@ export default function FieldExtension({ ctx }: Props) {
       <output>
         <SelectedList items={value} handleDragEnd={setValue}>
           {value.map((item) => (
-            <SelectedListItem key={item.id} id={item.id} item={item} removeItem={removeItem}/>
+            <SelectedListItem
+              key={item.id}
+              id={item.id}
+              item={item}
+              removeItem={removeItem}
+            />
           ))}
         </SelectedList>
       </output>
