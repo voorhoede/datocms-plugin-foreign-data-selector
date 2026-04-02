@@ -2,7 +2,7 @@ import { debounce, get } from "lodash";
 import { RenderFieldExtensionCtx } from "datocms-plugin-sdk";
 import { Canvas } from "datocms-react-ui";
 import type { Parameters } from "../types/parameters";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import getDataFromPath from "../utils/getDataFromPath";
 import parseString from "../utils/parseString";
 import formatData from "../utils/formatData";
@@ -18,18 +18,40 @@ type Props = {
 };
 
 export default function FieldExtension({ ctx }: Props) {
-  const parameters = ctx.parameters as Parameters;
+  const {
+    setHeight,
+    startAutoResizer,
+    stopAutoResizer,
+    parameters: rawParameters,
+    fieldPath,
+    formValues
+  } = ctx;
+
+  const parameters = rawParameters as Parameters;
   const [selectValue, setSelectValue] = useState<SelectOptionType | null>(null);
   const [value, setValue] = useState<ForeignDataItem[]>(
-    JSON.parse(get(ctx.formValues, ctx.fieldPath) as string) || [],
+    JSON.parse(get(formValues, fieldPath) as string) || [],
   );
 
-  const fetchOptions = async (
-    inputValue: string,
-  ): Promise<SelectOptionType[]> => {
-    const url = new URL(
-      parseString(parameters.searchUrl, { query: inputValue }),
-    );
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMenuOpen = useCallback(() => {
+    if (containerRef.current) {
+      const currentHeight = containerRef.current.getBoundingClientRect().height;
+
+      stopAutoResizer();
+
+      setHeight(currentHeight + 20);
+    }
+  }, [stopAutoResizer, setHeight]);
+
+  const handleMenuClose = useCallback(() => {
+    startAutoResizer();
+  }, [startAutoResizer]);
+
+
+  const fetchOptions = async (inputValue: string): Promise<SelectOptionType[]> => {
+    const url = new URL(parseString(parameters.searchUrl, { query: inputValue }));
     const proxy = new URL("https://cors-proxy.datocms.com");
     proxy.searchParams.set("url", url.href);
 
@@ -57,10 +79,7 @@ export default function FieldExtension({ ctx }: Props) {
         label: item.title,
         data: { ...item },
       }))
-      .filter(
-        (item: any) =>
-          !value.find((i: { id: string }) => i.id === item.data.id),
-      );
+      .filter((item: any) => !value.find((i: { id: string }) => i.id === item.data.id));
   };
 
   const loadOptions = useCallback(
@@ -88,43 +107,45 @@ export default function FieldExtension({ ctx }: Props) {
   }
 
   useEffect(() => {
-    /* fieldValue contains all sorts of characters like \n which will never be matched, so we have to parse and stringify to get rid of them */
-    const oldFieldValue = JSON.stringify(
-      JSON.parse(get(ctx.formValues, ctx.fieldPath) as string),
-    );
+    const oldFieldValue = JSON.stringify(JSON.parse(get(formValues, fieldPath) as string));
     const newFieldValue = JSON.stringify(value);
 
     if (oldFieldValue !== newFieldValue) {
-      ctx.setFieldValue(ctx.fieldPath, newFieldValue);
+      ctx.setFieldValue(fieldPath, newFieldValue);
     }
-  }, [value, ctx.fieldPath, ctx.formValues]);
+  }, [value, fieldPath, formValues, ctx]);
 
   return (
     <Canvas ctx={ctx}>
-      <InputSelect
-        itemLength={value.length}
-        min={parameters.min ? Number(parameters.min) : undefined}
-        max={parameters.max ? Number(parameters.max) : undefined}
-        loadOptions={loadOptions}
-        onChange={(item) => {
-          selectItem(item as SelectOptionType);
-          setSelectValue(null);
-        }}
-        value={selectValue}
-      />
+      <div ref={containerRef}>
+        <InputSelect
+          itemLength={value.length}
+          min={parameters.min ? Number(parameters.min) : undefined}
+          max={parameters.max ? Number(parameters.max) : undefined}
+          loadOptions={loadOptions}
+          onMenuOpen={handleMenuOpen}
+          onMenuClose={handleMenuClose}
+          onChange={(item) => {
+            selectItem(item as SelectOptionType);
+            setSelectValue(null);
+            handleMenuClose();
+          }}
+          value={selectValue}
+        />
 
-      <output>
-        <SelectedList items={value} handleDragEnd={setValue}>
-          {value.map((item) => (
-            <SelectedListItem
-              key={item.id}
-              id={item.id}
-              item={item}
-              removeItem={removeItem}
-            />
-          ))}
-        </SelectedList>
-      </output>
+        <output style={{ marginTop: '10px', display: 'block' }}>
+          <SelectedList items={value} handleDragEnd={setValue}>
+            {value.map((item) => (
+              <SelectedListItem
+                key={item.id}
+                id={item.id}
+                item={item}
+                removeItem={removeItem}
+              />
+            ))}
+          </SelectedList>
+        </output>
+      </div>
     </Canvas>
   );
 }
