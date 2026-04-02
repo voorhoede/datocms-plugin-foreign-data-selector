@@ -141,7 +141,7 @@ export default function FieldExtension({ ctx }: Props) {
           value={selectValue}
         />
 
-        <output style={{ marginTop: "10px", display: "block" }}>
+        <output>
           <SelectedList items={value} handleDragEnd={setValue}>
             {value.map((item) => (
               <SelectedListItem
