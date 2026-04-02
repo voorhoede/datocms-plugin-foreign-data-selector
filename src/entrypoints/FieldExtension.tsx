@@ -41,7 +41,7 @@ export default function FieldExtension({ ctx }: Props) {
 
       stopAutoResizer();
 
-      setHeight(currentHeight + 20);
+      setHeight(Math.max(currentHeight, 360) + 20);
     }
   }, [stopAutoResizer, setHeight]);
 
