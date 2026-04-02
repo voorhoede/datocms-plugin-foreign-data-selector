@@ -24,7 +24,7 @@ export default function FieldExtension({ ctx }: Props) {
     stopAutoResizer,
     parameters: rawParameters,
     fieldPath,
-    formValues
+    formValues,
   } = ctx;
 
   const parameters = rawParameters as Parameters;
@@ -49,9 +49,12 @@ export default function FieldExtension({ ctx }: Props) {
     startAutoResizer();
   }, [startAutoResizer]);
 
-
-  const fetchOptions = async (inputValue: string): Promise<SelectOptionType[]> => {
-    const url = new URL(parseString(parameters.searchUrl, { query: inputValue }));
+  const fetchOptions = async (
+    inputValue: string,
+  ): Promise<SelectOptionType[]> => {
+    const url = new URL(
+      parseString(parameters.searchUrl, { query: inputValue }),
+    );
     const proxy = new URL("https://cors-proxy.datocms.com");
     proxy.searchParams.set("url", url.href);
 
@@ -79,7 +82,10 @@ export default function FieldExtension({ ctx }: Props) {
         label: item.title,
         data: { ...item },
       }))
-      .filter((item: any) => !value.find((i: { id: string }) => i.id === item.data.id));
+      .filter(
+        (item: any) =>
+          !value.find((i: { id: string }) => i.id === item.data.id),
+      );
   };
 
   const loadOptions = useCallback(
@@ -107,7 +113,9 @@ export default function FieldExtension({ ctx }: Props) {
   }
 
   useEffect(() => {
-    const oldFieldValue = JSON.stringify(JSON.parse(get(formValues, fieldPath) as string));
+    const oldFieldValue = JSON.stringify(
+      JSON.parse(get(formValues, fieldPath) as string),
+    );
     const newFieldValue = JSON.stringify(value);
 
     if (oldFieldValue !== newFieldValue) {
@@ -133,7 +141,7 @@ export default function FieldExtension({ ctx }: Props) {
           value={selectValue}
         />
 
-        <output style={{ marginTop: '10px', display: 'block' }}>
+        <output style={{ marginTop: "10px", display: "block" }}>
           <SelectedList items={value} handleDragEnd={setValue}>
             {value.map((item) => (
               <SelectedListItem
