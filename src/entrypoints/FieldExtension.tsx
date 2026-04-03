@@ -41,6 +41,8 @@ export default function FieldExtension({ ctx }: Props) {
 
       stopAutoResizer();
 
+      // Ensure the canvas is tall enough to show the entire menu (min 360px)
+      // and account for container padding (20px).
       setHeight(Math.max(currentHeight, 360) + 20);
     }
   }, [stopAutoResizer, setHeight]);
