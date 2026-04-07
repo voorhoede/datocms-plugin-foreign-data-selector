@@ -8,7 +8,8 @@ import {
   TextareaField,
   TextField
 } from "datocms-react-ui";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { useState } from "react";
 import createPreviewObject from "../utils/createPreviewObject";
 import type { Parameters } from "../types/parameters";
 
@@ -30,39 +31,42 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
   const [titleMap, setTitleMap] = useState<string>(parameters.titleMap ?? "title");
   const [descriptionMap, setDescriptionMap] = useState<string | undefined>(parameters.descriptionMap);
   const [imageUrlMap, setImageUrlMap] = useState<string | undefined>(parameters.imageUrlMap);
-  const [preview, setPreview] = useState<string>();
 
-  function renderPreview() {
-    const previewObj = createPreviewObject(
-      path,
-      idMap,
-      titleMap,
-      descriptionMap,
-      imageUrlMap,
-    );
-    setPreview(JSON.stringify(previewObj, null, 2));
-  }
+  const preview = useMemo(
+    () =>
+      JSON.stringify(
+        createPreviewObject(path, idMap, titleMap, descriptionMap, imageUrlMap),
+        null,
+        2,
+      ),
+    [path, idMap, titleMap, descriptionMap, imageUrlMap],
+  );
+
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
-    renderPreview();
+    clearTimeout(debounceRef.current);
 
-    const newParameters = {
-      ...parameters,
-      searchUrl,
-      additionalHeaders,
-      useCORSProxy,
-      min,
-      max,
-      path,
-      idMap,
-      titleMap,
-      descriptionMap,
-      imageUrlMap,
-    };
-    setParameters(newParameters);
+    debounceRef.current = setTimeout(() => {
+      setParameters({
+        searchUrl,
+        additionalHeaders,
+        useCORSProxy,
+        min,
+        max,
+        path,
+        idMap,
+        titleMap,
+        descriptionMap,
+        imageUrlMap,
+      });
+    }, 300);
+
+    return () => clearTimeout(debounceRef.current);
   }, [
     searchUrl,
     additionalHeaders,
+    useCORSProxy,
     min,
     max,
     path,
@@ -86,38 +90,26 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           hint="URL should contain a { query } placeholder."
           required
         />
-        <TextField
+        <TextareaField
           id="additionalHeaders"
           name="additionalHeaders"
           label="Additional Headers (JSON format)"
-          hint='For example: {"Authorization":"Bearer 123","X-API-Key":"abc"}'
+          hint='For example: {"Authorization": "Bearer 123", "X-API-Key": "abc"}'
           value={additionalHeaders}
           onChange={setAdditionalHeaders}
+          textareaInputProps={{
+            monospaced: true,
+            rows: 3,
+          }}
         />
         <SwitchField
           name="useCORSProxy"
           id="useCORSProxy"
           label="Use CORS Proxy"
+          hint="Enable if the API doesn't allow direct browser requests (CORS errors)"
           value={useCORSProxy}
           onChange={setUseCORSProxy}
         />
-
-        <FieldGroup>
-          <TextField
-            id="min"
-            name="min"
-            label="Min"
-            value={min}
-            onChange={setMin}
-          />
-          <TextField
-            id="max"
-            name="max"
-            label="Max"
-            value={max}
-            onChange={setMax}
-          />
-        </FieldGroup>
 
         <h3>Response Mapping</h3>
 
@@ -127,7 +119,14 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           label="Path"
           value={path}
           onChange={setPath}
-          hint={<FieldHint>Use JSON Path notation. <a href="https://jsonpath.com/" target="_blank">Learn more</a></FieldHint>}
+          hint={
+            <FieldHint>
+              Path to the array of items in the API response. Uses JSON Path notation.{" "}
+              <a href="https://jsonpath.com/" target="_blank">
+                Learn more
+              </a>
+            </FieldHint>
+          }
           required
         />
         <TextField
@@ -136,6 +135,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           label="ID"
           value={idMap}
           onChange={setIdMap}
+          hint="Key in the response object that maps to the item's unique identifier"
           required
         />
         <TextField
@@ -144,6 +144,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           label="Title"
           value={titleMap}
           onChange={setTitleMap}
+          hint="Key in the response object used as the display title"
           required
         />
         <TextField
@@ -152,6 +153,7 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           label="Description"
           value={descriptionMap}
           onChange={setDescriptionMap}
+          hint="Key in the response object used as the item description"
         />
         <TextField
           id="imageUrl"
@@ -159,7 +161,9 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
           label="Image URL"
           value={imageUrlMap}
           onChange={setImageUrlMap}
+          hint="Key in the response object that contains a preview image URL"
         />
+
         <TextareaField
           id="responsePreview"
           name="responsePreview"
@@ -172,6 +176,29 @@ export default function FieldExtensionConfigScreen({ ctx }: Props) {
             rows: 10,
           }}
         />
+
+        <h3>Validation</h3>
+
+        <FieldGroup>
+          <TextField
+            id="min"
+            name="min"
+            label="Minimum selections"
+            value={min}
+            onChange={setMin}
+            hint="Minimum number of items the editor must select"
+            textInputProps={{ type: "number", min: "0" }}
+          />
+          <TextField
+            id="max"
+            name="max"
+            label="Maximum selections"
+            value={max}
+            onChange={setMax}
+            hint="Maximum number of items the editor can select"
+            textInputProps={{ type: "number", min: "0" }}
+          />
+        </FieldGroup>
       </Form>
     </Canvas>
   );
